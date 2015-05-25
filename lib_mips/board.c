@@ -1946,7 +1946,17 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	    s = getenv ("bootdelay");
 	    timer1 = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
 	}
-
+/*web failsafe*/
+	int counter = 1;
+	udelay(500000);
+	if ( counter > 0 ) {
+		printf( "\n\nWPS button was pressed for %d seconds\nHTTP server is starting for firmware update...\n\n", counter );
+		eth_initialize(gd->bd);
+		NetLoopHttpd();
+	} else {
+		printf( "\n\nCatution: WPS button wasn't pressed or not long enough!\nContinuing normal boot...\n\n" );
+	}
+/*failsafe end!*/
 	OperationSelect();   
 	while (timer1 > 0) {
 		--timer1;
