@@ -125,7 +125,11 @@ static char  file_name_space[ARGV_LEN];
         ".set\tpop"                                             \
         : "=r" (__res));                                        \
         __res;})
-
+//added by mango
+void gpio_init(void);
+void led_on(void);
+void led_off(void);
+int detect_wps(void);
 
 static void Init_System_Mode(void)
 {
@@ -1947,14 +1951,27 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	    timer1 = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
 	}
 /*web failsafe*/
-	int counter = 1;
-	udelay(500000);
+	gpio_init();
+	int counter = 0;
+	for(i=0;i<20;i++){
+		led_on();
+		udelay(200000);
+		led_off();
+		udelay(200000);
+		if(detect_wps())
+		{
+		counter++;
+		}
+		if(counter>5)
+		break;
+	}
+	udelay(100000);
 	if ( counter > 0 ) {
-		printf( "\n\nWPS button was pressed for %d seconds\nHTTP server is starting for firmware update...\n\n", counter );
+		printf( "\n\nHTTP server is starting for firmware update...\n\n");
 		eth_initialize(gd->bd);
 		NetLoopHttpd();
 	} else {
-		printf( "\n\nCatution: WPS button wasn't pressed or not long enough!\nContinuing normal boot...\n\n" );
+		printf( "\n\nContinuing normal boot...\n\n");
 	}
 /*failsafe end!*/
 	OperationSelect();   
@@ -2833,3 +2850,55 @@ void disable_pcie(void)
 	RALINK_REG(RT2880_CLKCFG1_REG) = val;
 #endif
 }
+//added by mango 20150526
+//wled_n GPIO35 WLAN_KN_MODE 2b01
+//WDT GPIO37 WDT_MODE 1b1
+void gpio_init(void)
+{
+	u32 val;
+	printf( "MT7688 gpio init : wled and wdt\n" );
+	//set gpio2_mode 1:0=2b01 wled
+	val=RALINK_REG(RT2880_SYS_CNTL_BASE+0x64);
+	val&=~3;
+	val|=1;
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x64)=val;
+	//gpio44 output gpio_ctrl_1 bit3=1
+	val=RALINK_REG(RT2880_REG_PIODIR+0x04);
+	val|=1<<12;
+	RALINK_REG(RT2880_REG_PIODIR+0x04)=val;
+	//set gpio1_mode 14=1b1	
+	val=RALINK_REG(RT2880_SYS_CNTL_BASE+0x60);	
+	val|=1<<14;
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x60)=val;
+	//gpio38 input gpio_ctrl_1 bit5=0
+	val=RALINK_REG(RT2880_REG_PIODIR+0x04);	
+	val&=~1<<6;
+	RALINK_REG(RT2880_REG_PIODIR+0x04)=val;	
+}
+void led_on( void )
+{
+	//gpio44 gpio_dclr_1 644 clear bit12
+	RALINK_REG(0xb0000644)=1<<12;
+}
+void led_off( void )
+{
+	//gpio44 gpio_dset_1 634 set bit12
+	RALINK_REG(0xb0000634)=1<<12;
+}
+int detect_wps( void )
+{
+	u32 val;
+	val=RALINK_REG(0xb0000624);//624
+	if(val&1<<6){
+		return 0;
+	}
+	else{
+		printf("wps button pressed!\n");
+		return 1;
+	}
+}
+
+
+
+
+
