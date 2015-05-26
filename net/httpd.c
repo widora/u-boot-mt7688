@@ -15,7 +15,8 @@
 #include "../httpd/uip_arp.h"
 
 #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
-
+extern void led_on(void);
+extern void led_off(void);
 //#include <gpio.h>
 #include <spi_api.h>
 
@@ -95,9 +96,9 @@ int do_http_progress( const int state ){
 
 			// blink LED fast 10 times
 			for ( i = 0; i < 10; ++i ) {
-//				LEDON();
+				led_on();
 				udelay( 25000 );
-//				LEDOFF();
+				led_off();
 				udelay( 25000 );
 			}
 
@@ -112,9 +113,9 @@ int do_http_progress( const int state ){
 
 			// blink LED fast 10 times
 			for ( i = 0; i < 10; ++i ) {
-//				LEDON();
+				led_on();
 				udelay( 25000 );
-//				LEDOFF();
+				led_off();
 				udelay( 25000 );
 			}
 			printf( "HTTP upload is done! Upgrading...\n" );
@@ -124,9 +125,9 @@ int do_http_progress( const int state ){
 
 			// blink LED fast 10 times
 			for ( i = 0; i < 10; ++i ) {
-//				LEDON();
+				led_on();
 				udelay( 25000 );
-//				LEDOFF();
+				led_off();
 				udelay( 25000 );
 			}
 			printf( "HTTP ugrade is done! Rebooting...\n\n" );
@@ -137,9 +138,9 @@ int do_http_progress( const int state ){
 
 			// blink LED fast for 4 sec
 			for ( i = 0; i < 80; ++i ) {
-//				LEDON();
+				led_on();
 				udelay( 25000 );
-//				LEDOFF();
+				led_off();
 				udelay( 25000 );
 			}
 
