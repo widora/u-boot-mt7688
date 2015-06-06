@@ -22,7 +22,7 @@
 # after receive POST data, returns this page and stops.
 
 # Vendor specific directory (default: "general")
-vendor_dir=${1:-cleanwrt}
+vendor_dir=${1:-Widora}
 
 # Temporary files
 files_content_tmp="vendors/.files_content"

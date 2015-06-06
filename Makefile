@@ -1806,7 +1806,7 @@ clean:
 	rm -f board/cray/L1/bootscript.c board/cray/L1/bootscript.image
 	rm -f board/trab/trab_fkt
 	rm -f stage1/stage2.bin stage1/stage1n2.elf stage1/stage1n2.map
-	rm -f ./uboot.bin ./uboot.img ./u-boot ./u-boot.* ./uboot_a.bin ./System.map
+	rm -f ./uboot.bin ./uboot.img ./u-boot ./u-boot.* ./uboot_a.bin ./System.map ./httpd/fsdata.c
 	rm -f scripts/lxdialog/lxdialog
 
 clobber:	clean
