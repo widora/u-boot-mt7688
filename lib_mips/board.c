@@ -1952,22 +1952,24 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	}
 /*web failsafe*/
 	gpio_init();
+	printf( "\nif you press the WPS button for more than 3 seconds will automatically enter the Update mode\n");
 	int counter = 0;
-	for(i=0;i<20;i++){
+	for(i=0;i<10;i++){
 		led_on();
 		udelay(200000);
 		led_off();
 		udelay(200000);
+		printf( "\n%d",i);
 		if(detect_wps())
 		{
 		counter++;
 		}
-		if(counter>5)
+		if(counter>3)
 		break;
 	}
 	udelay(100000);
 	if ( counter > 0 ) {
-		printf( "\n\nHTTP server is starting for firmware update...\n\n");
+		printf( "\n\nHTTP server is starting for update...\n\n");
 		eth_initialize(gd->bd);
 		NetLoopHttpd();
 	} else {

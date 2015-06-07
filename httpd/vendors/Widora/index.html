@@ -2,16 +2,23 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Firmware update</title>
+		<title>Widora Update</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<div id="h"><img src="vt.png"></div>
 		<div id="m">
-			<h1>Firmware Update</h1>
-			<p>You are going to upload new firmware to the device.<br>Choose a proper file from your local hard drive and click <strong>"Update firmware"</strong> button.<br>Please, do not power off the device during update, if everything goes well, the device will restart.</p>
-			<form method="post" enctype="multipart/form-data"><input type="file" name="firmware"><input type="submit" value="Update firmware"></form> 
+		
+		<h1>Update for Widora</h1>
+		
+<p>First step:select the file <br>
+   Second step:click <strong>"Update"</strong>button<br>
+Don't power off the device during update, if everything goes well, the device will restart.</p>
+
+<form method="post" enctype="multipart/form-data"><input type="file" name="firmware"><input type="submit" value="Update firmware"></form> 
+<p><strong>U-Boot is very important,please be sure to update this device!!!</strong></p>
+<form method="post" enctype="multipart/form-data"><input type="file" name="uboot"><input type="submit" value="Update U-Boot"></form> 
 		</div>
-		<div id="f">You can find more information about this project on <a href="https://github.com/guangmangdz/u-boot-mt7688" target="_blank">GitHub</a></div>
+		<div id="f">Widora is based on MT7688AN and Arduino,You can find more information about this project on <a href="https://github.com/guangmangdz/u-boot-mt7688" target="_blank">GitHub</a></div>
 	</body>
 </html>
