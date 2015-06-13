@@ -537,6 +537,7 @@ static int display_banner(void)
 {
    
 	printf ("\n\n%s\n\n", version_string);
+	printf ("\n\nWidora by mango,V1.0.0\n\n");
 	return (0);
 }
 
