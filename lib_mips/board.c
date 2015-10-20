@@ -130,7 +130,7 @@ void gpio_init(void);
 void led_on(void);
 void led_off(void);
 int detect_wps(void);
-
+void gpio_test( void );
 static void Init_System_Mode(void)
 {
 	u32 reg;
@@ -537,7 +537,7 @@ static int display_banner(void)
 {
    
 	printf ("\n\n%s\n\n", version_string);
-	printf ("\n\nWidora by mango,V1.0.1\n\n");
+	printf ("\n\nWidora by mango,V1.0.2\n\n");
 	return (0);
 }
 
@@ -1953,23 +1953,26 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	}
 /*web failsafe*/
 	gpio_init();
-	printf( "\nif you press the WPS button for more than 3 seconds will automatically enter the Update mode\n");
+	printf( "\nif you press the WPS button for more than 2 seconds will automatically enter the Update mode,more than 7 seconds enter gpio test mode\n");
 	int counter = 0;
 	for(i=0;i<10;i++){
 		led_on();
-		udelay(200000);
+		udelay(100000);
 		led_off();
-		udelay(200000);
+		udelay(100000);
 		printf( "\n%d",i);
 		if(detect_wps())
 		{
 		counter++;
 		}
-		if(counter>3)
+		if(counter>7)
 		break;
 	}
 	udelay(100000);
-	if ( counter > 0 ) {
+	if ( counter > 7 ) {
+		printf( "\n\nAll GPIO test...\n\n");
+		gpio_test();
+	} else if( counter > 2) {
 		printf( "\n\nHTTP server is starting for update...\n\n");
 		eth_initialize(gd->bd);
 		NetLoopHttpd();
@@ -2900,7 +2903,70 @@ int detect_wps( void )
 		return 1;
 	}
 }
+void gpio_test( void )
+{
+	u32 agpio_cfg,gpio1_mode,gpio2_mode,val; 
+	u32 gpio_ctrl0,gpio_ctrl1,gpio_dat0,gpio_dat1;
+	u8 i=0;
+	agpio_cfg = RALINK_REG(RT2880_SYS_CNTL_BASE+0x3c);
+	gpio1_mode= RALINK_REG(RT2880_SYS_CNTL_BASE+0x60);
+	gpio2_mode= RALINK_REG(RT2880_SYS_CNTL_BASE+0x64);
+	gpio_ctrl0= RALINK_REG(0xb0000600);
+	gpio_ctrl1= RALINK_REG(0xb0000604);
+	gpio_dat0 = RALINK_REG(0xb0000620);
+	gpio_dat1 = RALINK_REG(0xb0000624);
+	//agpio
+	val=0;
+	val|=0x0f<<17;//ephy p1-p4 selection digital PAD
+	val|=0x1f;//refclk,i2s digital PAD
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x3c)=val;
+	//gpio1_mode
+	val=0;
+	val|=0x05<<28;//pwm0,pwm1
+	val|=0x05<<24;//uart1,uart2
+	val|=0x01<<20;//i2c_mode
+	val|=0x01<<18;//refclk
+	val|=0x01<<14;//wdt_mode
+	val|=0x01<<10;//sd_mode
+	val|=0x01<<6;//i2s
+	val|=0x01<<4;//cs1
+	val|=0x01<<2;//spis
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x60)=val;
+	//gpio2_mode
+	val=0;
+	val|=0x01<<10;//p4 led
+	val|=0x01<<8;//p3 led
+	val|=0x01<<6;//p2 led
+	val|=0x01<<4;//p1 led
+	val|=0x01<<2;//p0 led
+	val|=0x01<<0;//wled
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x64)=val;
+	//ctrl0,ctrl1
+	RALINK_REG(0xb0000600)=0xffffffff;
+	RALINK_REG(0xb0000604)=0xffffffff;
+	RALINK_REG(0xb0000604)&=~0x01<<6;
 
+	udelay(600000);
+	for(i=0;i<100;i++){
+	printf("\nall led off\n");
+	RALINK_REG(0xb0000620)=0xffffffff;
+	RALINK_REG(0xb0000624)=0xffffffff;
+	udelay(200000);
+	printf("\nall led on\n");
+	RALINK_REG(0xb0000620)=0x0;
+	RALINK_REG(0xb0000624)=0x0;
+	udelay(200000);
+	if(detect_wps())
+	break;
+	}
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x3c)=agpio_cfg;
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x60)=gpio1_mode;
+	RALINK_REG(RT2880_SYS_CNTL_BASE+0x64)=gpio2_mode;
+	RALINK_REG(0xb0000600)=gpio_ctrl0;
+	RALINK_REG(0xb0000604)=gpio_ctrl1;
+	RALINK_REG(0xb0000620)=gpio_dat0;
+	RALINK_REG(0xb0000624)=gpio_dat1;
+}
 
 
 

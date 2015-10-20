@@ -1,8 +1,8 @@
 *.o
 *.a
 *.bak
-*~
 *.bin
+*~
 *.elf
 /doc
 .menuconfig.log
