@@ -537,7 +537,7 @@ static int display_banner(void)
 {
    
 	printf ("\n\n%s\n\n", version_string);
-	printf ("\n\nWidora by mango,V1.0.2\n\n");
+	printf ("\n\nWidora by mango,V1.0.3\n\n");
 	return (0);
 }
 
@@ -2856,18 +2856,17 @@ void disable_pcie(void)
 	RALINK_REG(RT2880_CLKCFG1_REG) = val;
 #endif
 }
-//added by mango 20150526
-//wled_n GPIO35 WLAN_KN_MODE 2b01
-//WDT GPIO37 WDT_MODE 1b1
+//added by mango 20160120
+//wled_n GPIO44 WLAN_AN_MODE 2b01
+//WDT GPIO38 WDT_MODE 1b1
 void gpio_init(void)
 {
 	u32 val;
-	printf( "MT7688 gpio init : wled and wdt\n" );
-	//set gpio2_mode 1:0=2b01 wled
-	val=RALINK_REG(RT2880_SYS_CNTL_BASE+0x64);
-	val&=~3;
-	val|=1;
+	printf( "MT7688 gpio init : wled and wdt by mango\n" );
+	//set gpio2_mode 1:0=2b01 wled,p1,p2,p3,p4 is gpio.p0 is ephy
+	val = 0x551;
 	RALINK_REG(RT2880_SYS_CNTL_BASE+0x64)=val;
+	RALINK_REG(0xb0000644)=0x0f<<7;
 	//gpio44 output gpio_ctrl_1 bit3=1
 	val=RALINK_REG(RT2880_REG_PIODIR+0x04);
 	val|=1<<12;
