@@ -2943,7 +2943,7 @@ void gpio_test( void )
 	//ctrl0,ctrl1
 	RALINK_REG(0xb0000600)=0xffffffff;
 	RALINK_REG(0xb0000604)=0xffffffff;
-	RALINK_REG(0xb0000604)&=~0x01<<6;
+	RALINK_REG(0xb0000604)&=~(0x01<<6);
 
 	udelay(600000);
 	for(i=0;i<100;i++){
