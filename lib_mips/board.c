@@ -537,7 +537,7 @@ static int display_banner(void)
 {
    
 	printf ("\n\n%s\n\n", version_string);
-	printf ("\n\nWidora by mango,V1.0.4\n\n");
+	printf ("\n\nWidora by mango,V1.0.5\n\n");
 	return (0);
 }
 
@@ -890,6 +890,8 @@ void OperationSelect(void)
 #ifdef RALINK_CMDLINE
 	printf("   %d: Entr boot command line interface.\n", SEL_ENTER_CLI);
 #endif // RALINK_CMDLINE //
+	printf("   5: Entr ALL LED test mode.\n");
+	printf("   6: Entr Web failsafe mode.\n");
 #ifdef RALINK_UPGRADE_BY_SERIAL
 	printf("   %d: Load Boot Loader code then write to Flash via Serial. \n", SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL);
 #endif // RALINK_UPGRADE_BY_SERIAL //
@@ -1988,7 +1990,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
 			if ((my_tmp = tstc()) != 0) {	/* we got a key press	*/
 				timer1 = 0;	/* no more delay	*/
 				BootType = getc();
-				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9'))
+				if ((BootType < '0' || BootType > '6') && (BootType != '7') && (BootType != '8') && (BootType != '9'))
 					BootType = '3';
 				printf("\n\rYou choosed %c\n\n", BootType);
 				break;
@@ -2114,6 +2116,13 @@ void board_init_r (gd_t *id, ulong dest_addr)
 			for (;;) {					
 				main_loop ();
 			}
+			break;
+		case '5':
+			gpio_test();
+			break;
+		case '6':
+			eth_initialize(gd->bd);
+			NetLoopHttpd();
 			break;
 #endif // RALINK_CMDLINE //
 #ifdef RALINK_UPGRADE_BY_SERIAL
