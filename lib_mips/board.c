@@ -536,8 +536,7 @@ static int init_func_ram (void)
 static int display_banner(void)
 {
    
-	printf ("\n\n%s\n\n", version_string);
-	printf ("\n\nWidora by mango,V1.0.5\n\n");
+	printf ("\n\nWidora by mango,V1.0.6\n\n");
 	return (0);
 }
 
