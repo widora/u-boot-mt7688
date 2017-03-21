@@ -301,7 +301,7 @@ static void Init_System_Mode(void)
 		mips_cpu_feq = ((RALINK_REG(RALINK_SYSCTL_BASE+0x10)>>6)&0x1) ? (40*1000*1000)/CPU_FRAC_DIV \
 					   : (25*1000*1000)/CPU_FRAC_DIV;
 	}else {
-		mips_cpu_feq = (575*1000*1000)/CPU_FRAC_DIV;
+		mips_cpu_feq = (580*1000*1000)/CPU_FRAC_DIV;
 	}
 	mips_bus_feq = mips_cpu_feq/3;
 #elif defined(MT7621_ASIC_BOARD)
@@ -1954,31 +1954,23 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	}
 /*web failsafe*/
 	gpio_init();
-	printf( "\nif you press the WPS button for more than 2 seconds will automatically enter the Update mode,more than 7 seconds enter gpio test mode\n");
+	led_off();
+	printf( "\nif you press the WPS button will automatically enter the Update mode\n");
 	int counter = 0;
 	for(i=0;i<10;i++){
-		led_on();
-		udelay(100000);
-		led_off();
-		udelay(100000);
+		udelay(150000);
 		printf( "\n%d",i);
 		if(detect_wps())
 		{
+		led_on();
 		counter++;
-		}
-		if(counter>7)
 		break;
+		}
 	}
-	udelay(100000);
-	if ( counter > 7 ) {
-		printf( "\n\nAll GPIO test...\n\n");
-		gpio_test();
-	} else if( counter > 2) {
+	if ( counter ) {
 		printf( "\n\nHTTP server is starting for update...\n\n");
 		eth_initialize(gd->bd);
 		NetLoopHttpd();
-	} else {
-		printf( "\n\nContinuing normal boot...\n\n");
 	}
 /*failsafe end!*/
 	OperationSelect();   
@@ -2873,8 +2865,8 @@ void gpio_init(void)
 	printf( "MT7688 gpio init : wled and wdt by mango\n" );
 	//set gpio2_mode 1:0=2b01 wled,p1,p2,p3,p4 is gpio.p0 is ephy
 	val = 0x551;
+	RALINK_REG(0xb0000634)=0x0f<<7;
 	RALINK_REG(RT2880_SYS_CNTL_BASE+0x64)=val;
-	RALINK_REG(0xb0000644)=0x0f<<7;
 	//gpio44 output gpio_ctrl_1 bit3=1
 	val=RALINK_REG(RT2880_REG_PIODIR+0x04);
 	val|=1<<12;

@@ -97,9 +97,9 @@ int do_http_progress( const int state ){
 			// blink LED fast 10 times
 			for ( i = 0; i < 10; ++i ) {
 				led_on();
-				udelay( 25000 );
+				udelay( 150000 );
 				led_off();
-				udelay( 25000 );
+				udelay( 150000 );
 			}
 
 			printf( "HTTP server is ready!\n\n" );
@@ -126,9 +126,9 @@ int do_http_progress( const int state ){
 			// blink LED fast 10 times
 			for ( i = 0; i < 10; ++i ) {
 				led_on();
-				udelay( 25000 );
+				udelay( 150000 );
 				led_off();
-				udelay( 25000 );
+				udelay( 150000 );
 			}
 			printf( "HTTP ugrade is done! Rebooting...\n\n" );
 			break;

@@ -29,7 +29,7 @@ files_content_tmp="vendors/.files_content"
 files_list_tmp="vendors/.files_list"
 
 # YUI Compressor path (should be in the same dir)
-yui_compressor=`ls -t vendors/*.jar 2> /dev/null | tail --lines=1`
+yui_compressor=`ls -t vendors/*.jar 2> /dev/null | tail -n 1`
 
 # Previous fsdata_file var name
 prev_fsdata_struct="NULL"
