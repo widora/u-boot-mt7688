@@ -2948,12 +2948,12 @@ void gpio_test( void )
 	udelay(600000);
 	for(i=0;i<100;i++){
 	printf("\nall led off\n");
-	RALINK_REG(0xb0000620)=0xffffffff;
-	RALINK_REG(0xb0000624)=0xffffffff;
+	RALINK_REG(0xb0000620)=0x55555555;
+	RALINK_REG(0xb0000624)=0x55555555;
 	udelay(200000);
 	printf("\nall led on\n");
-	RALINK_REG(0xb0000620)=0x0;
-	RALINK_REG(0xb0000624)=0x0;
+	RALINK_REG(0xb0000620)=0xaaaaaaaa;
+	RALINK_REG(0xb0000624)=0xaaaaaaaa;
 	udelay(200000);
 	if(detect_wps())
 	break;
