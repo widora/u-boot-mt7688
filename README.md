@@ -8,6 +8,7 @@
 
 ### Note
 * note:compile need java such as 1.7.0_79
+
 # update list 1.0.7
 * Press 'WPS' button when power on, then enter the failsafe web mode.
 * change the sysfrq from 575Mhz to 580Mhz
