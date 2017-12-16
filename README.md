@@ -1,12 +1,12 @@
 # u-boot-mt7688
-## uboot for Widora V1.0.7
+#### uboot for Widora V1.0.7(with simple web)
 ***
 # How to use
 * 1.make menuconfig
 * 2.select MT7628 board
 * 3.make clean;make
 
-# Note
+### Note
 * note:compile need java such as 1.7.0_79
 # update list 1.0.7
 * Press 'WPS' button when power on, then enter the failsafe web mode.
@@ -20,5 +20,5 @@
 ***
 * QQ:771992497
 * mail:widora@qq.com
-* twitter:https://twitter.com/mangogeek
+* twitter:https://twitter.com/widora_io
 ## Thanks to Manfeel、cleanwrt、Piotr Dymac、Adam Dunkels。
