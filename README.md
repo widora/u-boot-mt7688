@@ -21,5 +21,5 @@
 ***
 * QQ:771992497
 * mail:widora@qq.com
-* twitter:https://twitter.com/widora_io
+* twitter:https://twitter.com/widoraIoT
 ## Thanks to Manfeel、cleanwrt、Piotr Dymac、Adam Dunkels。
