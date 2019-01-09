@@ -1845,7 +1845,7 @@ int NetLoopHttpd( void ){
 		buf = rt2880_free_buf_entry_dequeue( &rt2880_free_buf_list ); 
 		NetTxPacket = buf->pbuf;
 
-		debug( "\n NetTxPacket = 0x%08X \n", NetTxPacket );
+		//debug( "\n NetTxPacket = 0x%08X \n", NetTxPacket );
 		for ( i = 0; i < NUM_RX_DESC; i++ ) {
 
 			buf = rt2880_free_buf_entry_dequeue( &rt2880_free_buf_list ); 
@@ -1854,13 +1854,13 @@ int NetLoopHttpd( void ){
 				return ( -1 );
 			}
 			NetRxPackets[i] = buf->pbuf;
-			printf( "\n NetRxPackets[%d] = 0x%08X\n",i,NetRxPackets[i] );
+		//	printf( "\n NetRxPackets[%d] = 0x%08X\n",i,NetRxPackets[i] );
 		}
 	}
 	
 	NetTxPacket = KSEG1ADDR( NetTxPacket );
 
-	printf("\n KSEG1ADDR(NetTxPacket) = 0x%08X \n",NetTxPacket);
+//	printf("\n KSEG1ADDR(NetTxPacket) = 0x%08X \n",NetTxPacket);
 
 	if ( !NetArpWaitTxPacket ) {
 		NetArpWaitTxPacket = &NetArpWaitPacketBuf[0] + ( PKTALIGN - 1 );
