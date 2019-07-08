@@ -220,7 +220,8 @@ void serial_setbrg (void)
 
 	IER(CFG_RT2880_CONSOLE) = 0;		/* Disable for now */
 	FCR(CFG_RT2880_CONSOLE) = 0;		/* No fifos enabled */
-
+	if(clock_divisor == 21 )
+		clock_divisor +=1;
 	/* set baud rate */
 	LCR(CFG_RT2880_CONSOLE) = LCR_WLS0 | LCR_WLS1 | LCR_DLAB;
 	DLL(CFG_RT2880_CONSOLE) = clock_divisor & 0xff;
