@@ -1565,7 +1565,7 @@ DDR_READY:
 	li      t1, 0x00008282
 	sw      t1, 0(t0)
 	la      t0, RALINK_DDR_CFG9
-	li      t1, 0x00008383
+	li      t1, 0x00008689
 	sw      t1, 0(t0)
 1:	
 #endif
