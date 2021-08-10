@@ -727,9 +727,16 @@ static int raspi_read_scur(u8 *val)
 
 static int raspi_4byte_mode(int enable)
 {
-	ssize_t retval;
-	
+	ssize_t retval = 0 ;
+	u8 sr = 0;
+	u8 adp = 0;
 	raspi_wait_ready(1);
+
+	if (raspi_read_rg(0x15, &sr) < 0) {
+		printf("%s: read_sr fail: %x\n", __func__, sr);
+		return -1;
+	}
+	adp = sr&0x02;
 
 	if (spi_chip_info->id == 0x1) // Spansion
 	{
@@ -797,21 +804,24 @@ static int raspi_4byte_mode(int enable)
 		if (enable) {
 			ra_or(SPI_REG_CTL, 0x3 << 19);
 			ra_or(SPI_REG_Q_CTL, 0x3 << 8);
+			retval = bbu_spic_trans(code, 0, NULL, 1, 0, 0);
 		}
-		else {
+		else if (adp == 0){
 			ra_and(SPI_REG_CTL, ~SPI_CTL_SIZE_MASK);
 			ra_or(SPI_REG_CTL, 0x2 << 19);
 			ra_and(SPI_REG_Q_CTL, ~(0x3 << 8));
-			ra_or(SPI_REG_Q_CTL, 0x2 << 8);
+			ra_or(SPI_REG_Q_CTL, 0x2 << 8);	
+			retval = bbu_spic_trans(code, 0, NULL, 1, 0, 0);
 		}
-		retval = bbu_spic_trans(code, 0, NULL, 1, 0, 0);
 #endif
 		// for Winbond's W25Q256FV, need to clear extend address register
+		if (adp == 0) {
 		if ((!enable) && (spi_chip_info->id == 0xef))
-		{
+			{
 			u8 code = 0x0;
 			raspi_write_enable();
 			raspi_write_rg(0xc5, &code);
+			}
 		}
 		if (retval != 0) {
 			printf("%s: ret: %x\n", __func__, retval);
